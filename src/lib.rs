@@ -19,17 +19,12 @@ impl Bot {
 #[async_trait]
 impl EventHandler for Bot {
     async fn message(&self, ctx: Context, msg: Message) {
-        if msg.content == "!hello" {
-            if let Err(e) = msg.channel_id.say(&ctx.http, "world!").await {
-                error!("Error sending message: {:?}", e);
-            }
-        }
         if msg.content.starts_with("!AskAI") {
             let ai21 = AI21::new(self.secret_store.get("AI_TOKEN").unwrap().as_str()).temperature(0.9).stop_sequences(vec!["Q:".to_string()]).build();
             let request = msg.content.clone().replace("!AskAI", "");
             let response = ai21.complete(
                 "Pretend you're a stupid internet bot that annoys people. Answer these questions in the most ridiculous and sarcastic way possible:
-Q: MyQuestion \n A: "
+Q: MyQuestion \n A:"
                     .replace("MyQuestion", request.as_str()).as_str(),
             ).await.unwrap();
             if let Err(e) = msg.reply(&ctx.http, response).await {

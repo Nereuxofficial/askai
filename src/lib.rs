@@ -21,7 +21,8 @@ impl EventHandler for Bot {
     async fn message(&self, ctx: Context, msg: Message) {
         if msg.content.starts_with("!AskAI") {
             let ai21 = AI21::new(self.secret_store.get("AI_TOKEN").unwrap().as_str())
-                .temperature(0.9)
+                .temperature(0.6)
+                .max_tokens(200)
                 .stop_sequences(vec!["Q:".to_string()])
                 .build();
             let request = msg.content.clone().replace("!AskAI", "");

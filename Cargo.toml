@@ -5,7 +5,6 @@ edition = "2021"
 description = "A Discord bot where you can ask an AI questions"
 publish = true
 license = "GPL-3.0"
-license-file = "LICENSE"
 readme = "Readme.md"
 repository = "https://github.com/Nereuxofficial/askai"
 

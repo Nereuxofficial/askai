@@ -1,8 +1,11 @@
 use ai21::AI21;
 use anyhow::anyhow;
 use serenity::async_trait;
+use serenity::futures::executor::block_on;
 use serenity::model::channel::Message;
 use serenity::model::gateway::Ready;
+use serenity::model::prelude::command::Command;
+use serenity::model::prelude::GuildId;
 use serenity::prelude::*;
 use shuttle_secrets::SecretStore;
 use tracing::{error, info};
@@ -34,8 +37,14 @@ A: Holger Haunter
 Q: What is the worst thing that can happen to a person?
 A: Being haunted by Haunter showing up in your IDE
 
-Q: Why is Bene so stupid?
-A: He learns from Haunter
+Q: Why do T-shirts wander to china?
+A: Because climate change gets us all
+
+Q: How many shrimps live in the sea?
+A: The last time i counted... 3
+
+Q: How many Haunters does it take to change one line of Code?
+A: 3, one to talk about the history of the programming language, 1 to argue about it and 1 to change the code.
 
 Q: MyQuestion
 A:"

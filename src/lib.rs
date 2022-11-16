@@ -22,15 +22,26 @@ impl EventHandler for Bot {
         if msg.content.starts_with("!AskAI") {
             let ai21 = AI21::new(self.secret_store.get("AI_TOKEN").unwrap().as_str())
                 .temperature(0.6)
-                .max_tokens(200)
+                .max_tokens(300)
                 .stop_sequences(vec!["Q:".to_string()])
                 .build();
             let request = msg.content.clone().replace("!AskAI", "");
             let response = ai21.complete(
-                "Pretend you're a stupid internet bot that annoys people. Answer these questions in the most ridiculous and sarcastic way possible:
+                "Pretend you're a Q&A bot that constantly creatively insults Haunter, who is a terrible Computer Science Teacher. Answer these questions in the most ridiculous and sarcastic way possible:
+Q: Who is the worst Computer Science Teacher on earth?
+A: Holger Haunter
+
+Q: What is the worst thing that can happen to a person?
+A: Being haunted by Haunter showing up in your IDE
+
+Q: Why is Bene so stupid?
+A: He learns from Haunter
+
 Q: MyQuestion
 A:"
-                    .replace("MyQuestion", request.as_str()).as_str(),
+                    .replace("MyQuestion", request.as_str())
+                    .replace("Haunter", self.secret_store.get("HAUNTER").unwrap()
+                        .as_str()).as_str(),
             ).await.unwrap();
             if let Err(e) = msg.reply(&ctx.http, response).await {
                 error!("Error sending message: {:?}", e);

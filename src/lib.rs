@@ -5,7 +5,7 @@ use serenity::futures::executor::block_on;
 use serenity::model::channel::Message;
 use serenity::model::gateway::Ready;
 use serenity::model::prelude::command::Command;
-use serenity::model::prelude::GuildId;
+use serenity::model::prelude::{Activity, GuildId, OnlineStatus};
 use serenity::prelude::*;
 use shuttle_secrets::SecretStore;
 use tracing::{error, info};
@@ -58,7 +58,9 @@ A:"
         }
     }
 
-    async fn ready(&self, _: Context, ready: Ready) {
+    async fn ready(&self, ctx: Context, ready: Ready) {
+        // Change bot activity
+        ctx.set_presence(Some(Activity::playing("!AskAI <Your Question>".to_string())), OnlineStatus::Online).await;
         info!("{} is connected!", ready.user.name);
     }
 }

@@ -1,4 +1,8 @@
 use anyhow::anyhow;
+use rust_bert::gpt2::GPT2Generator;
+use rust_bert::pipelines::generation_utils::{
+    GenerateOptions, GeneratedTextOutput, LanguageGenerator,
+};
 use rust_bert::pipelines::question_answering::{Answer, QaInput, QuestionAnsweringModel};
 use serenity::async_trait;
 use serenity::model::channel::Message;
@@ -7,8 +11,6 @@ use serenity::model::prelude::{Activity, OnlineStatus};
 use serenity::prelude::*;
 use std::collections::BTreeMap;
 use std::fmt::format;
-use rust_bert::gpt2::GPT2Generator;
-use rust_bert::pipelines::generation_utils::{GeneratedTextOutput, GenerateOptions, LanguageGenerator};
 use tokio::task::spawn_blocking;
 use tracing::{error, info};
 struct Bot {
@@ -25,10 +27,9 @@ impl Bot {
 impl EventHandler for Bot {
     async fn message(&self, ctx: Context, msg: Message) {
         if msg.content.starts_with("!AskAI") {
-            info!("Got request: {}", msg.content);
             let content_clone = msg.content.clone();
             let secret_store = self.secret_store.clone();
-            let handle = spawn_blocking(move || -> Vec<GeneratedTextOutput>{
+            let handle = spawn_blocking(move || -> String {
                 let model = GPT2Generator::new(Default::default()).unwrap();
 
                 let question = String::from(format!("Q: {}", content_clone.replace("!AskAI", "")));
@@ -52,16 +53,17 @@ Q: MyQuestion
 A:".replace("Haunter", secret_store.get("HAUNTER").unwrap().as_str()).replace("MyQuestion", question.as_str()));
 
                 let generate_options = GenerateOptions {
-                    max_length: Some(30),
+                    max_length: Some((context.len() + 150) as i64),
                     ..Default::default()
                 };
+                let context_clone = context.clone();
+                let answers = model.generate(Some(&[context]), Some(generate_options));
 
-                model.generate(Some(&[context]), Some(generate_options))
-
-
+                answers[0].clone().text.replace(&context_clone, "")
             });
-            let answers = handle.await.unwrap();
-            if let Err(e) = msg.reply(&ctx.http, answers[0].clone().text).await {
+            let answer = handle.await.unwrap();
+
+            if let Err(e) = msg.reply(&ctx.http, answer).await {
                 error!("Error sending message: {:?}", e);
             }
         }

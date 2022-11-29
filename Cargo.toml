@@ -14,6 +14,7 @@ serenity = { version = "0.11.5", default-features = false, features = ["client",
 serde = "1.0"
 toml = "0.5.9"
 tracing = "0.1.37"
+tracing-subscriber = "0.3.16"
 reqwest = "0.11.12"
 serde_json = "1.0.87"
 tokio = { version = "1.15.0", features = ["full"] }

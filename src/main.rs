@@ -10,7 +10,6 @@ use serenity::model::gateway::Ready;
 use serenity::model::prelude::{Activity, OnlineStatus};
 use serenity::prelude::*;
 use std::collections::BTreeMap;
-use std::fmt::format;
 use tokio::task::spawn_blocking;
 use tracing::{error, info};
 struct Bot {
@@ -62,7 +61,7 @@ A:".replace("Haunter", secret_store.get("HAUNTER").unwrap().as_str()).replace("M
                 answers[0].clone().text.replace(&context_clone, "")
             });
             let answer = handle.await.unwrap();
-
+            info!("Generated Answer: {}", answer);
             if let Err(e) = msg.reply(&ctx.http, answer).await {
                 error!("Error sending message: {:?}", e);
             }
@@ -81,6 +80,7 @@ A:".replace("Haunter", secret_store.get("HAUNTER").unwrap().as_str()).replace("M
 }
 #[tokio::main]
 async fn main() {
+    tracing_subscriber::fmt::init();
     // Get our secret store
     let secret_store: BTreeMap<String, String> =
         toml::from_str(std::fs::read_to_string("Secrets.toml").unwrap().as_str()).unwrap();

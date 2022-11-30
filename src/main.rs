@@ -25,7 +25,10 @@ impl Bot {
 #[async_trait]
 impl EventHandler for Bot {
     async fn message(&self, ctx: Context, msg: Message) {
-        if msg.content.starts_with("!AskAI") {
+        if msg.content.clone().trim() == "!Ava"{
+            let _ = msg.channel_id.say(&ctx.http, "Hello! \n I am Ava, an AI designed to answer your questions in an unexpected way").await;
+        }
+        if msg.content.starts_with("!AskAI") || msg.content.starts_with("!Ava"){
             let content_clone = msg.content.clone();
             let secret_store = self.secret_store.clone();
             let handle = spawn_blocking(move || -> String {
@@ -80,7 +83,7 @@ A:".replace("Haunter", secret_store.get("HAUNTER").unwrap().as_str()).replace("M
 }
 #[tokio::main]
 async fn main() {
-    tracing_subscriber::fmt::init();
+    console_subscriber::init();
     // Get our secret store
     let secret_store: BTreeMap<String, String> =
         toml::from_str(std::fs::read_to_string("Secrets.toml").unwrap().as_str()).unwrap();

@@ -1,5 +1,3 @@
-#![feature(async_closure)]
-
 use serenity::async_trait;
 use serenity::model::channel::Message;
 use serenity::model::gateway::Ready;
@@ -9,8 +7,8 @@ use std::collections::BTreeMap;
 
 use tracing::{error, info};
 
-const PROMPT: &str = "Pretend you're a Student that really likes Porsche, who studies Computer Science, likes Programming and working out and is a really cool guy.
-He also has the largest ass in the known universe. Answer these questions in the most ridiculous way possible:
+const PROMPT: &str = "Pretend you're Philipp. You really like Porsche, study Computer Science, like Programming and working out and are a really cool guy.
+You also have the largest ass in the known universe. Answer these questions in the most ridiculous way possible:
 
 Q: What is your favourite car?
 A: Porscheeeee

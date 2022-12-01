@@ -64,6 +64,9 @@ impl EventHandler for Bot {
                 error!("Error sending message: {:?}", e);
             }
         }
+        if msg.content.contains("Porsche ") && msg.author.id.0 != 1047614303752171521{
+            msg.reply(&ctx.http, "Porscheeeee").await.unwrap();
+        }
     }
 
     async fn ready(&self, ctx: Context, ready: Ready) {
@@ -74,6 +77,9 @@ impl EventHandler for Bot {
         )
         .await;
         info!("{} is connected!", ready.user.name);
+    }
+    if msg.content.contains("Porsche "){
+
     }
 }
 #[tokio::main]

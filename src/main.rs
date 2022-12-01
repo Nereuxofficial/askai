@@ -53,7 +53,7 @@ impl EventHandler for Bot {
             let args = openai_api_fork::api::CompletionArgs::builder()
                 .prompt(prompt)
                 .engine("davinci")
-                .max_tokens(400)
+                .max_tokens(150)
                 .stop(vec!["Q:".into()])
                 .build()
                 .unwrap();
@@ -65,6 +65,9 @@ impl EventHandler for Bot {
             if let Err(e) = msg.reply(&ctx.http, answer).await {
                 error!("Error sending message: {:?}", e);
             }
+        }
+        if msg.content.contains("Porsche") {
+            let _ = msg.channel_id.say(&ctx.http, "Porscheeeee").await;
         }
     }
 

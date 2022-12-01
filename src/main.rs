@@ -78,9 +78,6 @@ impl EventHandler for Bot {
         .await;
         info!("{} is connected!", ready.user.name);
     }
-    if msg.content.contains("Porsche "){
-
-    }
 }
 #[tokio::main]
 async fn main() {

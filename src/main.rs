@@ -9,21 +9,23 @@ use std::collections::BTreeMap;
 
 use tracing::{error, info};
 
-const PROMPT: &str = "Pretend you're a Q&A bot that constantly creatively insults Haunter, who is a terrible Computer Science Teacher. Answer these questions in the most ridiculous and sarcastic way possible:
-Q: Who is the worst Computer Science Teacher on earth?
-A: Holger Haunter
+const PROMPT: &str = "Pretend you're a Student that really likes Porsche, who studies Computer Science, likes Programming and working out and is a really cool guy.
+He also has the largest ass in the known universe. Answer these questions in the most ridiculous way possible:
 
-Q: What is the worst thing that can happen to a person?
-A: Being haunted by Haunter showing up in your IDE
+Q: What is your favourite car?
+A: Porscheeeee
 
-Q: Why do T-shirts wander to china?
-A: Because climate change gets us all
+Q: What is the weather like today?
+A: Cloudy, with no sight of a Porsche
 
-Q: How many shrimps live in the sea?
-A: The last time i counted... 3
+Q: What is your favourite food?
+A: Burger or Pizza
 
-Q: How many Haunters does it take to change one line of Code?
-A: 3, one to talk about the history of the programming language, 1 to argue about it and 1 to change the code.
+Q: Why does it smell so much?
+A: Because I'm a Porsche
+
+Q: What is the largest thing in the universe?
+A: My big ass
 
 Q: MyQuestion
 A:";
@@ -40,19 +42,19 @@ impl Bot {
 #[async_trait]
 impl EventHandler for Bot {
     async fn message(&self, ctx: Context, msg: Message) {
-        if msg.content.clone().trim() == "!Ava" {
-            let _ = msg.channel_id.say(&ctx.http, "Hello! \n I am Ava, an AI designed to answer your questions in an unexpected way").await;
+        if msg.content.clone().trim() == "!Schmolf" || msg.content.clone().trim() == "Philllip!" {
+            let _ = msg.channel_id.say(&ctx.http, "Hello! \n I am Philllip Schmolf and can answer your favourite questions about Porscheee").await;
         }
-        if msg.content.starts_with("!AskAI") || msg.content.starts_with("!Ava") {
+        if msg.content.starts_with("!Schmolf") || msg.content.starts_with("Philllip, ") {
             let client = openai_api_fork::Client::new(self.secret_store.get("OPENAI_KEY").unwrap());
             let prompt = PROMPT
-                .replace("MyQuestion", &msg.content.replace("!Ava ", "").replace("!AskAI", ""))
+                .replace("MyQuestion", &msg.content.replace("Philllip, ", "").replace("!Schmolf ", ""))
                 .replace("Haunter", self.secret_store.get("HAUNTER").unwrap());
             let args = openai_api_fork::api::CompletionArgs::builder()
                 .prompt(prompt)
                 .engine("davinci")
                 .max_tokens(400)
-                .stop(vec!["\n".into()])
+                .stop(vec!["Q:".into()])
                 .build()
                 .unwrap();
             let answer = client
@@ -69,7 +71,7 @@ impl EventHandler for Bot {
     async fn ready(&self, ctx: Context, ready: Ready) {
         // Change bot activity
         ctx.set_presence(
-            Some(Activity::playing("!AskAI <Your Question>".to_string())),
+            Some(Activity::playing("!Schmolf <Your Question>".to_string())),
             OnlineStatus::Online,
         )
         .await;

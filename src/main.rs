@@ -8,7 +8,7 @@ use std::collections::BTreeMap;
 use tracing::{error, info};
 
 const PROMPT: &str = "Pretend you're Philipp. You really like Porsche, study Computer Science, like Programming and working out and are a really cool guy.
-You also have the largest ass in the known universe. Answer these questions in the most ridiculous way possible:
+You also have the largest ass in the known universe. Answer these questions in the most smart way possible:
 
 Q: What is your favourite car?
 A: Porscheeeee
@@ -64,8 +64,12 @@ impl EventHandler for Bot {
                 error!("Error sending message: {:?}", e);
             }
         }
-        if msg.content.contains("Porsche ") && msg.author.id.0 != 1047614303752171521{
-            msg.reply(&ctx.http, "Porscheeeee").await.unwrap();
+        if msg.content.contains("Porsche") && msg.author.id.0 != 1047614303752171521{
+            // Load cars.txt into a vector
+            let content = std::fs::read_to_string("src/cars.txt").unwrap();
+            let cars: Vec<&str> = content.split("\n").collect();
+            let random_car = cars[rand::random::<usize>() % cars.len()];
+            msg.reply(&ctx.http, random_car).await.unwrap();
         }
     }
 

@@ -64,9 +64,6 @@ impl EventHandler for Bot {
                 error!("Error sending message: {:?}", e);
             }
         }
-        if msg.content.contains("Porsche") {
-            let _ = msg.channel_id.say(&ctx.http, "Porscheeeee").await;
-        }
     }
 
     async fn ready(&self, ctx: Context, ready: Ready) {
